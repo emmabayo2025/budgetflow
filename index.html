@@ -432,12 +432,12 @@
         </div>
         <div class="card">
           <div class="card-header"><span class="card-title">Spending by Category</span></div>
-          <div style="display:flex;align-items:center;gap:16px;">
-            <div style="position:relative;width:120px;height:120px;flex-shrink:0;">
+          <div style="display:flex;justify-content:center;margin-bottom:14px;">
+            <div style="position:relative;width:160px;height:160px;">
               <canvas id="donutChart" role="img" aria-label="Spending by category donut chart">Category breakdown.</canvas>
             </div>
-            <div id="catLegend" style="flex:1;font-size:12px;"></div>
           </div>
+          <div id="catLegend" style="font-size:12px;"></div>
         </div>
       </div>
 
@@ -783,22 +783,22 @@ function renderDonut() {
       datasets:[{data:cats.map(c=>spend[c]),backgroundColor:cats.map(c=>CAT_COLORS[c]||'#888'),borderWidth:2,borderColor:'transparent'}]
     },
     options:{
-      responsive:false, cutout:'65%',
+      responsive:true, maintainAspectRatio:true, cutout:'65%',
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.raw)+' ('+pct(c.raw,total)+'%)'}}}
     }
   });
 
   document.getElementById('catLegend').innerHTML = cats.slice(0,6).map(c=>`
-    <div class="cat-legend-row">
-      <div style="display:flex;align-items:center;gap:6px;">
-        <div style="width:9px;height:9px;border-radius:3px;background:${CAT_COLORS[c]||'#888'};flex-shrink:0"></div>
-        <span>${c}</span>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1;">
+        <div style="width:10px;height:10px;border-radius:3px;background:${CAT_COLORS[c]||'#888'};flex-shrink:0;"></div>
+        <span style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c}</span>
       </div>
-      <div style="display:flex;gap:10px;">
-        <span style="font-weight:600">${fmt(spend[c])}</span>
-        <span style="color:var(--text-muted);min-width:28px;text-align:right">${pct(spend[c],total)}%</span>
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;margin-left:10px;">
+        <span style="font-size:12px;font-weight:600;">${fmt(spend[c])}</span>
+        <span style="font-size:11px;color:var(--text-muted);min-width:32px;text-align:right;">${pct(spend[c],total)}%</span>
       </div>
-    </div>`).join('');
+    </div>`).join('') + (cats.length > 6 ? `<div style="font-size:11px;color:var(--text-muted);padding:6px 0;">+${cats.length-6} more categories</div>` : '');
 }
 
 function renderRecentTx() {
